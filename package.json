@@ -1,0 +1,21 @@
+{
+  "name": "state",
+  "version": "0.0.0",
+  "description": "state management",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "devDependencies": {
+    "just-test-it": "~0.0",
+    "browserify": "latest"
+  },
+  "scripts": {
+    "test": "just-test-it"
+  },
+  "keywords": [
+    "state"
+  ],
+  "author": "william mcilhagga",
+  "license": "ISC"
+}
