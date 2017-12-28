@@ -1,14 +1,14 @@
 {
   "name": "state",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "state management",
-  "main": "index.js",
+  "main": "src/undoredo.js",
   "directories": {
     "test": "test"
   },
   "devDependencies": {
-    "just-test-it": "~0.0",
-    "browserify": "latest"
+    "browserify": "latest",
+    "just-test-it": "latest"
   },
   "scripts": {
     "test": "just-test-it"

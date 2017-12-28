@@ -1,33 +1,57 @@
 // undo/redo implemented on an object
-function undoredo(state) {
+module.exports = function(state, onset) {
 	var now = {}
-	
-	return {
-		save: function(path) {
-			now.path = parsepath(path)
-			var frag = getfragment(state,now.path)
-			now.fragment = deepcopy(frag)
-			now.forward = {back: now}
-			now = now.forward
-			return frag
-		},
-		undo: () => moveto(now.back),
-		redo: () => moveto(now.forward),
-		can: {
+	onset = onset || function(){}
+
+	function $(path) {
+		path = parsepath(path)
+		var $$ = {
+			save: function(path) {
+				now.fragment = $$.get()
+				now.forward = {back: now}
+				now = now.forward
+				return $$
+			},
+			get: function() {
+				return deepcopy(getfragment(state, path))
+			},
+			set: function(v) {
+				setfragment(state, path, v)
+				onset(path)
+				return $$
+			},
+			parent: function() {
+				return $(path.slice(0,-1))
+			}		
+		}
+
+		$.undo = () => moveto(now.back)
+		$.redo = () => moveto(now.forward)
+		$.can = {
 			undo: function() {return !!now.back},
 			redo: function() {return !!now.forward}
 		}
+
+		$$.undo = $.undo
+		$$.redo = $.redo
+		$$.can = $.can
+
+		return $$
 	}
+
+	return $
+
 	
 	function parsepath(path) {
+		path = path || []
 		return typeof path === 'string' ? path.split(/\.|\[|\]/).filter(i=>i!=="") : path.slice()
 	}
 	
 	function moveto(node) {
 		if (node) {
 			now.path = node.path
-			now.fragment = getfragment(state,node.path)
-			setfragment(state,node.path, node.fragment)
+			now.fragment = getfragment(state, node.path)
+			setfragment(state, node.path, node.fragment)
 			delete node.path
 			delete node.fragment
 			now = node
@@ -52,18 +76,16 @@ function undoredo(state) {
 		return obj
 	}
 	
-	function map(obj, f) {
-		var m = {}
-		Object.keys(obj).forEach(function(k) {m[k] = f(obj[k], k, obj)})
-		return m
-	}
-	
 	function deepcopy(obj) {
 		switch (toType(obj)) {
 		case 'array':
 			return obj.map(v=>deepcopy(v))
 		case 'object':
-			return map(obj, deepcopy)
+			//return map(obj, deepcopy)
+			return Object.keys(obj).reduce(function(d,k) {
+				d[k] = deepcopy(obj[k]); 
+				return d
+			},{})
 		default:
 			return obj
 		}

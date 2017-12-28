@@ -1,10 +1,5 @@
-# IDE
-.idea/
-.vscode/
-
 # Logs
 *.log*
-yarn.lock
 package-lock.json
 
 # Misc
