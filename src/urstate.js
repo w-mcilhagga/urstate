@@ -1,5 +1,5 @@
 // undo/redo implemented on an object
-module.exports = function(state, onSet) {
+module.exports = function urstate(state, onSet) {
 	var now = {},
 		ur
 	

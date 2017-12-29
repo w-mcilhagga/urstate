@@ -1,5 +1,5 @@
 const assert = require('assert');
-var UR = require('../src/undoredo.js')
+var UR = require('../src/urstate.js')
 
 function deepEQ(a,b) {
     return EQ(a,b)&&EQ(b,a)

@@ -19,9 +19,9 @@
   },
   "scripts": {
     "test": "just-test-it",
-    "bundle": "browserify src/undoredo.js -t babelify -o dist/ur.js",
+    "bundle": "browserify src/urstate.js -t babelify -o dist/urstate.js",
     "build": "npm run bundle && npm run minify",
-    "minify": "uglifyjs dist/ur.js -o dist/ur.js -mc pure_funcs=Object.defineProperty --source-map includeSources,url=ur.js.map"
+    "minify": "uglifyjs dist/urstate.js -o dist/urstate.js --source-map includeSources,url=urstate.js.map"
   },
   "keywords": [
     "state"
