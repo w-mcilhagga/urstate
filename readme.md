@@ -19,7 +19,7 @@ and returns an object with the following methods:
 * ```save()``` saves a snapshot of the fragment for undoing later
 * ```get()``` gets a copy of the fragment
 * ```set(v)``` sets a new value ```v``` for the fragment, triggering the ```onset``` callback
-* ```merge(v)``` merges the properties of v with the fragment
+* ```merge(v)``` merges the properties of v with the fragment, triggering the ```onset``` callback
 * ```undo()``` undoes all changes since the previous ```save```
 * ```redo()``` redoes those changes
 * ```can.undo()``` true if undo is possible
@@ -27,4 +27,4 @@ and returns an object with the following methods:
 
 Note that ```undo```, ```redo```, ```can.undo```, and ```can.redo``` are also properties of ```$```.
 
-These methods are mostly chainable.
+The methods ```save```, ```set```, and ```merge``` are chainable.

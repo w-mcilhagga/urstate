@@ -6,7 +6,7 @@ function deepEQ(a,b) {
 
     function EQ(a,b) {
         if (typeof a !== 'object') return a===b
-        return Object.keys(a).reduce( (accum, v, k)=>accum && deepEQ(a[k],b[k]), 
+        return Object.keys(a).reduce( (accum, v, k)=>(accum && deepEQ(a[k],b[k])), 
             Array.isArray(a)===Array.isArray(b))
     }
 }
@@ -29,6 +29,8 @@ exports.testGet = function() {
     assert(deepEQ($('b').get(),state.b))
     assert($('c').get()!==state.c)
     assert(deepEQ($('c').get(), state.c))
+    var s = $().get()
+    assert(s!==state && deepEQ(s,state))
 }
 
 exports.testSet = function() {
@@ -51,5 +53,18 @@ exports.testSet = function() {
 }
 
 exports.testSaveUndo = function() {
-
+    assert($.can.undo()==false)
+    $('b[0]').save()
+    assert($.can.undo()==true)
+    $('b[0]').set(300)
+    assert($('b[0]').get()==300)
+    $.undo()
+    assert($.can.undo()==false)
+    assert($.can.redo()==true)
+    assert($('b[0]').get()==1) 
+    assert(deepEQ($().get(),state))
+    $.redo()
+    assert($.can.undo()==true)
+    assert($.can.redo()==false)
+    assert($('b[0]').get()==300) 
 }

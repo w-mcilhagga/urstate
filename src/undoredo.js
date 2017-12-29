@@ -1,8 +1,18 @@
 // undo/redo implemented on an object
 module.exports = function(state, onSet) {
-	var now = {}
-	onSet = onSet || function(){}
+	var now = {},
+		ur
+	
+	onSet = onSet || (() => undefined)
 	state = {root: state}
+	ur = {
+		undo: () => moveto(now.back),
+		redo: () => moveto(now.forward),
+		can: {
+			undo: () => !!now.back,
+			redo: () => !!now.forward
+		}
+	}
 
 	function $(path) {
 		path = ['root'].concat(parsepath(path))
@@ -10,34 +20,26 @@ module.exports = function(state, onSet) {
 		var $$ = {
 			save: function() {
 				now.path = path.slice()
-				now.fragment = $$.get()
+				now.fragment = this.get()
 				now.forward = {back: now}
 				now = now.forward
-				return $$
+				return this
 			},
 			get: () => deepcopy(getfragment(state, path)),
 			set: function(v) {
 				setfragment(state, path, v)
 				onSet(path)
-				return $$
+				return this
 			},
 			merge: function(v) {
 				Object.assign(getfragment(state, path), v)
 				onSet(path)
-				return $$
+				return this
 			}		
 		}
 
-		$.undo = () => moveto(now.back)
-		$.redo = () => moveto(now.forward)
-		$.can = {
-			undo: () => !!now.back,
-			redo: () => !!now.forward
-		}
-
-		$$.undo = $.undo
-		$$.redo = $.redo
-		$$.can = $.can
+		Object.assign($, ur)
+		Object.assign($$, ur)
 
 		return $$
 	}
