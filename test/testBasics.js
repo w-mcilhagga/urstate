@@ -20,6 +20,7 @@ var state = {
         e: []
     }
 }
+
 var $ = UR(state)
 
 exports.testGet = function() {
@@ -31,9 +32,24 @@ exports.testGet = function() {
 }
 
 exports.testSet = function() {
+    $('a').set(5)
+    assert(state.a===5)
+    state.a = 3 // undo 
 
+    var b = $('b').get() // save b
+    $('b[0]').set(1000)
+    assert(state.b[0]===1000)
+    $('b').set({x:10,y:'y'})
+    assert(deepEQ(state.b, {x:10,y:'y'}))
+    $('b').set(b)
+    assert(deepEQ(state.b, b)) // undo 
+
+    b = $('c.e') // save c.e
+    $('c.e').set([1,2,3])
+    assert(deepEQ(state.c.e, [1,2,3]))
+    state.c.e = b // undo
 }
 
-exports.testUndo2 = function() {
+exports.testSaveUndo = function() {
 
 }

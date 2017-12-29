@@ -20,8 +20,6 @@ and returns an object with the following methods:
 * ```get()``` gets a copy of the fragment
 * ```set(v)``` sets a new value ```v``` for the fragment, triggering the ```onset``` callback
 * ```merge(v)``` merges the properties of v with the fragment
-* ```$(path)``` drills down into a subpart of the fragment, returning a new fragment
-* ```parent()``` returns the fragment which is the parent of the current fragment
 * ```undo()``` undoes all changes since the previous ```save```
 * ```redo()``` redoes those changes
 * ```can.undo()``` true if undo is possible

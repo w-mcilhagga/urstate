@@ -1,35 +1,38 @@
 // undo/redo implemented on an object
-module.exports = function(state, onset) {
+module.exports = function(state, onSet) {
 	var now = {}
-	onset = onset || function(){}
+	onSet = onSet || function(){}
+	state = {root: state}
 
 	function $(path) {
-		path = parsepath(path)
+		path = ['root'].concat(parsepath(path))
+		
 		var $$ = {
-			save: function(path) {
+			save: function() {
+				now.path = path.slice()
 				now.fragment = $$.get()
 				now.forward = {back: now}
 				now = now.forward
 				return $$
 			},
-			get: function() {
-				return deepcopy(getfragment(state, path))
-			},
+			get: () => deepcopy(getfragment(state, path)),
 			set: function(v) {
 				setfragment(state, path, v)
-				onset(path)
+				onSet(path)
 				return $$
 			},
-			parent: function() {
-				return $(path.slice(0,-1))
+			merge: function(v) {
+				Object.assign(getfragment(state, path), v)
+				onSet(path)
+				return $$
 			}		
 		}
 
 		$.undo = () => moveto(now.back)
 		$.redo = () => moveto(now.forward)
 		$.can = {
-			undo: function() {return !!now.back},
-			redo: function() {return !!now.forward}
+			undo: () => !!now.back,
+			redo: () => !!now.forward
 		}
 
 		$$.undo = $.undo
@@ -63,17 +66,8 @@ module.exports = function(state, onset) {
 	}
 	
 	function setfragment(state, path, value) {
-		if (path.length==0) {
-			Object.assign(clear(state), value)
-		} else {
-			var s = getfragment(state,path.slice(0,-1))			
-			s[path.slice(-1)[0]] = value
-		}
-	}
-	
-	function clear(obj) {
-		Object.keys(obj).forEach(k=>(delete obj[k]))
-		return obj
+		var s = getfragment(state,path.slice(0,-1))			
+		s[path.slice(-1)[0]] = value
 	}
 	
 	function deepcopy(obj) {
@@ -81,7 +75,6 @@ module.exports = function(state, onset) {
 		case 'array':
 			return obj.map(v=>deepcopy(v))
 		case 'object':
-			//return map(obj, deepcopy)
 			return Object.keys(obj).reduce(function(d,k) {
 				d[k] = deepcopy(obj[k]); 
 				return d
