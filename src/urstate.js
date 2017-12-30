@@ -18,9 +18,9 @@ module.exports = function urstate(state, onSet) {
 		path = ['root'].concat(parsepath(path))
 		
 		var $$ = {
-			save: function() {
+			save: function(fragment) {
 				now.path = path.slice()
-				now.fragment = this.get()
+				now.fragment = fragment===undefined? this.get() : fragment
 				now.forward = {back: now}
 				now = now.forward
 				return this
@@ -30,12 +30,7 @@ module.exports = function urstate(state, onSet) {
 				setfragment(state, path, v)
 				onSet(path)
 				return this
-			},
-			merge: function(v) {
-				Object.assign(getfragment(state, path), v)
-				onSet(path)
-				return this
-			}		
+			}	
 		}
 
 		Object.assign($, ur)

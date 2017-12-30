@@ -31,6 +31,7 @@ exports.testGet = function() {
     assert(deepEQ($('c').get(), state.c))
     var s = $().get()
     assert(s!==state && deepEQ(s,state))
+    assert($('c.d').get()==$(['c', 'd']).get())
 }
 
 exports.testSet = function() {
