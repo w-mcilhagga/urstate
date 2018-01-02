@@ -4,6 +4,7 @@
 // undo/redo implemented on an object
 var _require = require("./utils.js"),
     deepcopy = _require.deepcopy,
+    copy = _require.copy,
     getfragment = _require.getfragment,
     setfragment = _require.setfragment,
     parsepath = _require.parsepath;
@@ -38,7 +39,7 @@ module.exports = function urmaker(state) {
 	function moveto(node) {
 		if (node) {
 			now.path = node.path;
-			now.fragment = getfragment(state, node.path);
+			now.fragment = copy(getfragment(state, node.path));
 			setfragment(state, node.path, node.fragment);
 			delete node.path;
 			delete node.fragment;
@@ -97,10 +98,21 @@ function deepcopy(obj) {
     }
 }
 
+function copy(obj) {
+    switch (toType(obj)) {
+        case 'array':
+            return obj.slice();
+        case 'object':
+            return Object.assign({}, obj);
+        default:
+            return obj;
+    }
+}
+
 function toType(obj) {
     return {}.toString.call(obj).match(/\s([a-zA-Z]+)/)[1].toLowerCase();
 }
 
-module.exports = { deepcopy: deepcopy, setfragment: setfragment, getfragment: getfragment, parsepath: parsepath };
+module.exports = { deepcopy: deepcopy, copy: copy, setfragment: setfragment, getfragment: getfragment, parsepath: parsepath };
 
 },{}]},{},[1]);
