@@ -19,8 +19,8 @@
   },
   "scripts": {
     "test": "just-test-it",
-    "bundle": "browserify src/urstate.js -t babelify -o dist/urstate.js",
-    "minify": "uglifyjs dist/urstate.js -o dist/urstate.min.js --compress"
+    "bundle": "browserify src/undoredo.js -t babelify -o dist/undoredo.js",
+    "minify": "uglifyjs dist/undoredo.js -o dist/undoredo.min.js --compress"
   },
   "keywords": [
     "state"
